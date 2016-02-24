@@ -58,4 +58,7 @@ public class MainActivity extends AppCompatActivity {
         // unregisterReceiver(receiver);
     }
 
+    public void toBlueTooth(View view) {
+        startActivity(new Intent(MainActivity.this,BlueToothActivity.class));
+    }
 }
