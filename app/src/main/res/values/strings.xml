@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Phone</string>
+    <string name="no_connection">当前无连接</string>
 </resources>
