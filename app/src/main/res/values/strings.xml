@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Phone</string>
-    <string name="no_connection">当前无连接</string>
+    <string name="no_connection">no connection</string>
+    <string name="open_bluetooth_setting">Bluetooth Settings</string>
+    <string name="bluetooth_status_closed">Bluetooth Closed</string>
+    <string name="bluetooth_status_open">Bluetooth Open</string>
+    <string name="send_msg">Send Message</string>
 </resources>

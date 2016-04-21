@@ -51,13 +51,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // unregisterReceiver(receiver);
-    }
-
     public void toBlueTooth(View view) {
         startActivity(new Intent(MainActivity.this,BlueToothActivity.class));
     }

@@ -3,22 +3,21 @@ package com.ldxx.phone;
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Set;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -26,6 +25,8 @@ public class BlueToothActivity extends AppCompatActivity {
     private static final String TAG = "BlueToothActivity";
 
     public static final int REQUEST_ENABLE_BT = 1100;
+    @Bind(R.id.bluetooth_status)
+    TextView mBluetoothStatus;
     private BluetoothAdapter adapter;
 
     @Override
@@ -50,10 +51,13 @@ public class BlueToothActivity extends AppCompatActivity {
         } else {
             //2.
             if (!adapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                mBluetoothStatus.setText(R.string.bluetooth_status_closed);
+                //请求打开蓝牙
+                //Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                //startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             } else {
-                queryDevices();
+                mBluetoothStatus.setText(R.string.bluetooth_status_open);
+                //queryDevices();
             }
         }
         Log.e(TAG, "onCreate: " + adapter);
@@ -109,6 +113,7 @@ public class BlueToothActivity extends AppCompatActivity {
                 switch (state) {
                     case BluetoothAdapter.STATE_OFF:
                         Log.e(TAG, "onReceive: STATE_OFF");
+                        mBluetoothStatus.setText(R.string.bluetooth_status_closed);
                         break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
                         Log.e(TAG, "onReceive: STATE_TURNING_OFF");
@@ -116,7 +121,7 @@ public class BlueToothActivity extends AppCompatActivity {
                     case BluetoothAdapter.STATE_ON:
                         Log.e(TAG, "onReceive: STATE_ON");
                         queryDevices();
-
+                        mBluetoothStatus.setText(R.string.bluetooth_status_open);
                         break;
                     case BluetoothAdapter.STATE_TURNING_ON:
                         Log.e(TAG, "onReceive: STATE_TURNING_ON");
@@ -127,7 +132,7 @@ public class BlueToothActivity extends AppCompatActivity {
         }
     };
 
-    public BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
+    public final BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();            // Get intent's action string
@@ -141,10 +146,10 @@ public class BlueToothActivity extends AppCompatActivity {
                 Log.e(TAG, "onReceive ACTION_ACL_DISCONNECTED: " + intent.getData());
                 //Do something with bluetooth device disconnection
             } else if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
-                Log.e(TAG, "onReceive: ACTION_BOND_STATE_CHANGED" );
-                BluetoothDevice device =  (BluetoothDevice) extras.get("android.bluetooth.device.extra.DEVICE");
-                if(device!=null){
-                    Log.e(TAG, "onReceive: "+device.getName()+" "+device.getAddress() );
+                Log.e(TAG, "onReceive: ACTION_BOND_STATE_CHANGED");
+                BluetoothDevice device = (BluetoothDevice) extras.get("android.bluetooth.device.extra.DEVICE");
+                if (device != null) {
+                    Log.e(TAG, "onReceive: " + device.getName() + " " + device.getAddress());
                 }
             }
         }
@@ -164,71 +169,10 @@ public class BlueToothActivity extends AppCompatActivity {
         unregisterReceiver(connectionReceiver);
     }
 
-
-    private class ConnectedThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
-
-        public ConnectedThread(BluetoothSocket socket, String socketType) {
-            Log.d(TAG, "create ConnectedThread: " + socketType);
-            mmSocket = socket;
-            InputStream tmpIn = null;
-            OutputStream tmpOut = null;
-
-            // Get the BluetoothSocket input and output streams
-            try {
-                tmpIn = socket.getInputStream();
-                tmpOut = socket.getOutputStream();
-            } catch (IOException e) {
-                Log.e(TAG, "temp sockets not created", e);
-            }
-
-            mmInStream = tmpIn;
-            mmOutStream = tmpOut;
-        }
-
-        public void run() {
-            Log.i(TAG, "BEGIN mConnectedThread");
-            byte[] buffer = new byte[1024];
-            int bytes;
-
-            // Keep listening to the InputStream while connected
-            while (true) {
-                try {
-                    // Read from the InputStream
-                    bytes = mmInStream.read(buffer);
-
-                } catch (IOException e) {
-                    Log.e(TAG, "disconnected", e);
-
-                    break;
-                }
-            }
-        }
-
-        /**
-         * Write to the connected OutStream.
-         *
-         * @param buffer The bytes to write
-         */
-        public void write(byte[] buffer) {
-            try {
-                mmOutStream.write(buffer);
-
-                // Share the sent message back to the UI Activity
-
-            } catch (IOException e) {
-                Log.e(TAG, "Exception during write", e);
-            }
-        }
-
-        public void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) {
-                Log.e(TAG, "close() of connect socket failed", e);
-            }
-        }
+    @OnClick(R.id.bluetooth_settings)
+    public void onClick() {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_BLUETOOTH_SETTINGS);
+        startActivity(intent);
     }
 }

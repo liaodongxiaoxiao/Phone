@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Phone</string>
+    <string name="no_connection">当前无连接</string>
+    <string name="open_bluetooth_setting">打开蓝牙设置</string>
+    <string name="bluetooth_status_closed">蓝牙未打卡</string>
+    <string name="bluetooth_status_open">蓝牙已打开</string>
+    <string name="send_msg">发送消息</string>
+</resources>

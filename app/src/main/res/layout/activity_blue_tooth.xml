@@ -11,10 +11,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ldxx.phone.BlueToothActivity">
     <TextView
+        android:id="@+id/bluetooth_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/bluetooth_status_open"/>
+    <TextView
         android:id="@+id/connect_status"
         android:layout_width="match_parent"
-        android:text="@string/no_connection"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="@string/no_connection"/>
     <Button
         android:id="@+id/discovery"
         android:layout_width="wrap_content"
@@ -25,4 +30,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Enabling discoverability"/>
+    <Button
+        android:id="@+id/bluetooth_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/open_bluetooth_setting"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#7acf56"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText android:id="@+id/msg"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"/>
+        <Button
+            android:id="@+id/send_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send_msg"/>
+    </LinearLayout>
 </LinearLayout>
